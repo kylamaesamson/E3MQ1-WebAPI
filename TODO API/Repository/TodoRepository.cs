@@ -21,9 +21,11 @@ namespace TODO_API.Repository
 
             return todo;
         }
-        public Task Delete(double ID)
+        public async Task Delete(double ID)
         {
-            throw new NotImplementedException();
+            var itemToDelete = await _context.Todos.FindAsync(ID);
+            _context.Todos.Remove(itemToDelete);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Todo>> Get()
@@ -36,9 +38,10 @@ namespace TODO_API.Repository
             return await _context.Todos.FindAsync(id);
         }
 
-        public Task Update(Todo todo)
+        public async Task Update(Todo todo)
         {
-            throw new NotImplementedException();
+            _context.Entry(todo).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
 }
