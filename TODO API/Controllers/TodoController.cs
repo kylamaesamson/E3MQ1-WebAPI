@@ -24,5 +24,30 @@ namespace TODO_API.Controllers
         {
             return await _todoRepository.Get();
         }
+
+        [HttpPost]
+        public async Task<ActionResult<Todo>> PostTodos([FromBody] Todo todo)
+        {
+            var newTodo = await _todoRepository.Create(todo);
+            return CreatedAtAction(nameof(GetTodos), new { ID = newTodo.ID }, newTodo);
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> PutTodos([FromBody] Todo todo)
+        {
+            await _todoRepository.Update(todo);
+            return NoContent();
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> Delete([FromBody] Todo todo)
+        {
+            var itemToDelete = await _todoRepository.Get(todo.ID);
+            if (itemToDelete == null) return NotFound();
+
+            await _todoRepository.Delete(itemToDelete.ID);
+            return NoContent();
+        }
+
     }
 }
